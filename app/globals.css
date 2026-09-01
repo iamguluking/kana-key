@@ -82,14 +82,8 @@ main {
   transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 
-.trainer-error { border-color: #e5aaa6; box-shadow: 0 24px 70px rgba(127,43,37,.1), inset 0 0 0 2px #d34a4415; animation: nudge .18s ease; }
+.trainer-error { border-color: #e5aaa6; box-shadow: 0 24px 70px rgba(127,43,37,.1), inset 0 0 0 2px #d34a4415; }
 .trainer-complete { border-color: #a8d5ba; box-shadow: 0 24px 70px rgba(43,127,77,.1), inset 0 0 0 2px #2f9b6015; }
-
-@keyframes nudge {
-  0%, 100% { transform: translateX(0); }
-  35% { transform: translateX(-4px); }
-  70% { transform: translateX(4px); }
-}
 
 .trainer-topline { position: absolute; top: 22px; left: 28px; right: 28px; display: flex; align-items: center; justify-content: space-between; }
 .eyebrow { color: var(--accent); font: 800 11px/1 var(--font-geist-mono), monospace; letter-spacing: .13em; }

@@ -32,4 +32,5 @@ test("ships the required physical-key input rules", async () => {
   assert.doesNotMatch(page, /读音按平假名输入，标点会自动跳过/);
   assert.doesNotMatch(css, /min-width:\s*940px/);
   assert.match(css, /max-height:\s*850px/);
+  assert.doesNotMatch(css, /@keyframes\s+nudge|animation:\s*nudge/);
 });
