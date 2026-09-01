@@ -10,6 +10,10 @@ test("provides exactly 10000 unique practice sentences", () => {
 
   assert.equal(sentenceBank.length, 10000);
   assert.equal(new Set(visibleSentences).size, 10000);
+  assert.equal(visibleSentences.filter((sentence) => sentence.endsWith("ます。")).length, 5000);
+  assert.equal(visibleSentences.filter((sentence) => sentence.endsWith("よ。")).length, 1250);
+  assert.equal(visibleSentences.filter((sentence) => sentence.endsWith("ね。")).length, 1250);
+  assert.equal(visibleSentences.filter((sentence) => sentence.endsWith("んだ。")).length, 1250);
   assert.ok(sentenceBank.every((sentence) => sentence.reading.length > 0));
 });
 
@@ -27,4 +31,5 @@ test("ships the required physical-key input rules", async () => {
   assert.doesNotMatch(page, /1000 SENTENCES/);
   assert.doesNotMatch(page, /读音按平假名输入，标点会自动跳过/);
   assert.doesNotMatch(css, /min-width:\s*940px/);
+  assert.match(css, /max-height:\s*850px/);
 });

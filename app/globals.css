@@ -231,6 +231,55 @@ footer { display: flex; justify-content: center; gap: 28px; padding: 22px 12px 0
   .keyboard-legend { font-size: 8px; gap: 6px 10px; }
 }
 
+@media (max-height: 850px) and (min-width: 981px) {
+  main { padding-bottom: 16px; }
+  .site-header { height: 60px; }
+  .brand-mark { width: 32px; height: 32px; border-radius: 9px; font-size: 16px; }
+  .mode-pill { padding: 8px 12px; }
+  .trainer {
+    min-height: clamp(235px, 34vh, 280px);
+    padding: 50px 34px 24px;
+    border-radius: 22px;
+  }
+  .trainer-topline { top: 18px; }
+  .progress-track { top: 42px; }
+  h1 { font-size: clamp(28px, 3vw, 41px); line-height: 1.55; }
+  .reading { margin-top: 10px; min-height: 26px; line-height: 1.55; }
+  .feedback-line { min-height: 16px; margin-top: 5px; }
+  .next-hint { min-height: 34px; margin-top: 6px; }
+  .next-hint kbd { height: 33px; }
+  .controls { padding: 12px 4px 9px; }
+  .controls p { margin-top: 2px; }
+  .keyboard { padding: 10px 12px; border-radius: 15px; }
+  .keyboard-status { padding-bottom: 8px; }
+  .key-row { gap: 4px; margin-bottom: 4px; }
+  .key { height: 42px; padding: 4px 6px; border-radius: 6px; }
+  .key b { font-size: 17px; }
+  .keyboard-legend { margin-top: 5px; }
+  footer { display: none; }
+}
+
+@media (max-height: 650px) and (min-width: 981px) {
+  .site-header { height: 52px; }
+  .trainer { min-height: 205px; padding: 43px 28px 18px; }
+  .trainer-topline { top: 14px; }
+  .progress-track { top: 36px; }
+  h1 { font-size: clamp(25px, 2.7vw, 35px); line-height: 1.45; }
+  .reading { margin-top: 7px; font-size: 14px; }
+  .feedback-line { margin-top: 2px; }
+  .next-hint { margin-top: 3px; min-height: 30px; }
+  .next-hint kbd { height: 29px; }
+  .controls { padding: 8px 4px 6px; }
+  .controls h2 { font-size: 15px; }
+  .controls p { display: none; }
+  .keyboard { padding: 8px 10px; }
+  .keyboard-status { padding-bottom: 6px; }
+  .key-row { gap: 3px; margin-bottom: 3px; }
+  .key { height: 35px; padding: 3px 5px; }
+  .key b { font-size: 15px; }
+  .keyboard-legend { margin-top: 3px; font-size: 9px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
