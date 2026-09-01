@@ -2,6 +2,7 @@
   "name": "kana-key",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kana-key.vercel.app/",
   "engines": {
     "node": ">=22.13.0"
   },
