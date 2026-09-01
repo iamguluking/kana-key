@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { sentenceBank } from "./sentences";
+import { createPracticeDeck, sentenceBank } from "./sentences";
 
 type KeyDefinition = {
   code: string;
@@ -109,13 +109,30 @@ function outputForKey(code: string, shift: boolean) {
   return shift && key.shifted ? key.shifted : key.base;
 }
 
-function randomIndex(previous: number, excluded: readonly number[] = []) {
-  if (sentenceBank.length < 2) return 0;
-  const blocked = new Set([previous, ...excluded]);
-  let next: number;
-  do {
-    next = Math.floor(Math.random() * sentenceBank.length);
-  } while (blocked.has(next) && blocked.size < sentenceBank.length);
+type PracticeDeckState = {
+  indices: number[];
+  cursor: number;
+};
+
+function takeNextSentence(deck: PracticeDeckState, previous: number) {
+  if (deck.cursor >= deck.indices.length) {
+    deck.indices = createPracticeDeck();
+    deck.cursor = 0;
+  }
+
+  const position = deck.cursor;
+  let next = deck.indices[deck.cursor];
+  deck.cursor += 1;
+
+  if (
+    sentenceBank[next].family === sentenceBank[previous].family &&
+    deck.cursor < deck.indices.length
+  ) {
+    deck.indices[position] = deck.indices[deck.cursor];
+    deck.indices[deck.cursor] = next;
+    next = deck.indices[position];
+  }
+
   return next;
 }
 
@@ -132,7 +149,7 @@ export default function Home() {
   const completionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const feedbackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transitionLocked = useRef(false);
-  const recentSentences = useRef<number[]>([]);
+  const practiceDeck = useRef<PracticeDeckState>({ indices: [], cursor: 0 });
 
   const sentence = sentenceBank[sentenceIndex];
   const characters = useMemo(() => Array.from(sentence.reading), [sentence]);
@@ -158,9 +175,7 @@ export default function Home() {
     setStatus("complete");
     completionTimer.current = setTimeout(() => {
       setSentenceIndex((previous) => {
-        const next = randomIndex(previous, recentSentences.current);
-        recentSentences.current = [previous, ...recentSentences.current].slice(0, 24);
-        return next;
+        return takeNextSentence(practiceDeck.current, previous);
       });
       setPosition(0);
       setPendingBase(null);
@@ -181,9 +196,7 @@ export default function Home() {
 
   useEffect(() => {
     setSentenceIndex((previous) => {
-      const next = randomIndex(previous);
-      recentSentences.current = [previous];
-      return next;
+      return takeNextSentence(practiceDeck.current, previous);
     });
     const storedKeyboard = window.localStorage.getItem("kana-keyboard-visible");
     const storedHighlight = window.localStorage.getItem("kana-highlight-visible");
