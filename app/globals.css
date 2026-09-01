@@ -154,25 +154,26 @@ rt { color: #85878d; font-size: .34em; font-weight: 570; letter-spacing: .05em; 
 .shift-on { color: var(--accent-deep); }
 .key-row { display: flex; gap: 7px; margin-bottom: 7px; }
 .key {
+  --key-inset: 7px;
   flex: 1;
   min-width: 0;
   height: 57px;
+  position: relative;
+  overflow: hidden;
   border: 1px solid #c9cbd0;
   border-bottom-width: 3px;
   border-radius: 8px;
   background: #f7f7f8;
   box-shadow: inset 0 1px 0 white;
-  padding: 7px 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  padding: 0;
   color: #85878d;
   font: 600 9px/1 var(--font-geist-mono), monospace;
   text-transform: uppercase;
   transition: background .1s ease, border-color .1s ease, transform .1s ease, box-shadow .1s ease;
 }
 
-.key b { align-self: center; color: var(--blue); font: 700 21px/1 "Hiragino Sans", sans-serif; text-transform: none; }
+.key > span { position: absolute; top: var(--key-inset); left: var(--key-inset); }
+.key b { position: absolute; left: 50%; bottom: var(--key-inset); transform: translateX(-50%); color: var(--blue); font: 700 21px/1 "Hiragino Sans", sans-serif; text-transform: none; }
 .key-medium { flex: 1.45; }
 .key-wide { flex: 1.75; }
 .key-active { background: var(--accent); border-color: var(--accent-deep); box-shadow: 0 0 0 4px #ff6b4a32, inset 0 1px 0 #ff9a82; color: #fff5ef; }
@@ -198,8 +199,8 @@ footer { display: flex; justify-content: center; gap: 28px; padding: 22px 12px 0
   .keyboard-status { padding: 0 3px 10px; }
   .key-row { width: 100%; gap: clamp(2px, .55vw, 6px); margin-bottom: clamp(2px, .55vw, 6px); }
   .key {
+    --key-inset: clamp(3px, .65vw, 6px);
     height: clamp(38px, 6.2vw, 54px);
-    padding: clamp(3px, .65vw, 6px);
     border-radius: clamp(5px, .75vw, 8px);
     font-size: clamp(6px, .9vw, 9px);
   }
@@ -220,7 +221,7 @@ footer { display: flex; justify-content: center; gap: 28px; padding: 22px 12px 0
   .keyboard { padding: 6px; border-radius: 11px; }
   .keyboard-status { font-size: 8px; padding-bottom: 8px; }
   .key-row { gap: 2px; margin-bottom: 2px; }
-  .key { height: 36px; padding: 3px 2px; border-bottom-width: 2px; font-size: 5.5px; border-radius: 4px; }
+  .key { --key-inset: 3px; height: 36px; border-bottom-width: 2px; font-size: 5.5px; border-radius: 4px; }
   .key b { font-size: 12px; }
   .keyboard-legend { font-size: 8px; gap: 6px 10px; }
 }
@@ -244,12 +245,12 @@ footer { display: flex; justify-content: center; gap: 28px; padding: 22px 12px 0
   .next-hint kbd { height: 33px; }
   .controls { padding: 12px 4px 9px; }
   .controls p { margin-top: 2px; }
-  .keyboard { padding: 10px 12px; border-radius: 15px; }
-  .keyboard-status { padding-bottom: 8px; }
+  .keyboard { padding: 8px 12px 6px; border-radius: 15px; }
+  .keyboard-status { padding-bottom: 4px; }
   .key-row { gap: 4px; margin-bottom: 4px; }
-  .key { height: 42px; padding: 4px 6px; border-radius: 6px; }
-  .key b { font-size: 17px; }
-  .keyboard-legend { margin-top: 5px; }
+  .key { --key-inset: 5px; height: 42px; border-radius: 6px; }
+  .key b { bottom: 4px; font-size: 16px; }
+  .keyboard-legend { margin-top: 3px; }
   footer { display: none; }
 }
 
@@ -266,12 +267,12 @@ footer { display: flex; justify-content: center; gap: 28px; padding: 22px 12px 0
   .controls { padding: 8px 4px 6px; }
   .controls h2 { font-size: 15px; }
   .controls p { display: none; }
-  .keyboard { padding: 8px 10px; }
-  .keyboard-status { padding-bottom: 6px; }
+  .keyboard { padding: 6px 10px 5px; }
+  .keyboard-status { padding-bottom: 3px; }
   .key-row { gap: 3px; margin-bottom: 3px; }
-  .key { height: 35px; padding: 3px 5px; }
-  .key b { font-size: 15px; }
-  .keyboard-legend { margin-top: 3px; font-size: 9px; }
+  .key { --key-inset: 3px; height: 35px; }
+  .key b { bottom: 3px; font-size: 14px; }
+  .keyboard-legend { margin-top: 2px; font-size: 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
