@@ -109,10 +109,13 @@ function outputForKey(code: string, shift: boolean) {
   return shift && key.shifted ? key.shifted : key.base;
 }
 
-function randomIndex(previous: number) {
+function randomIndex(previous: number, excluded: readonly number[] = []) {
   if (sentenceBank.length < 2) return 0;
-  let next = Math.floor(Math.random() * sentenceBank.length);
-  if (next === previous) next = (next + 1) % sentenceBank.length;
+  const blocked = new Set([previous, ...excluded]);
+  let next: number;
+  do {
+    next = Math.floor(Math.random() * sentenceBank.length);
+  } while (blocked.has(next) && blocked.size < sentenceBank.length);
   return next;
 }
 
@@ -128,6 +131,8 @@ export default function Home() {
   const [status, setStatus] = useState<"ready" | "error" | "complete">("ready");
   const completionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const feedbackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const transitionLocked = useRef(false);
+  const recentSentences = useRef<number[]>([]);
 
   const sentence = sentenceBank[sentenceIndex];
   const characters = useMemo(() => Array.from(sentence.reading), [sentence]);
@@ -147,13 +152,20 @@ export default function Home() {
       return;
     }
 
+    if (transitionLocked.current) return;
+    transitionLocked.current = true;
     setPosition(characters.length);
     setStatus("complete");
     completionTimer.current = setTimeout(() => {
-      setSentenceIndex((previous) => randomIndex(previous));
+      setSentenceIndex((previous) => {
+        const next = randomIndex(previous, recentSentences.current);
+        recentSentences.current = [previous, ...recentSentences.current].slice(0, 24);
+        return next;
+      });
       setPosition(0);
       setPendingBase(null);
       setStatus("ready");
+      transitionLocked.current = false;
     }, 620);
   }, [characters.length, position]);
 
@@ -168,7 +180,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setSentenceIndex((previous) => randomIndex(previous));
+    setSentenceIndex((previous) => {
+      const next = randomIndex(previous);
+      recentSentences.current = [previous];
+      return next;
+    });
     const storedKeyboard = window.localStorage.getItem("kana-keyboard-visible");
     const storedHighlight = window.localStorage.getItem("kana-highlight-visible");
     if (storedKeyboard !== null) setShowKeyboard(storedKeyboard === "true");
@@ -259,14 +275,13 @@ export default function Home() {
           <span>かな Key</span>
         </a>
         <div className="header-meta">
-          <span>1000 SENTENCES</span>
           <span className="mode-pill">ランダム練習</span>
         </div>
       </header>
 
       <section id="practice" className={`trainer trainer-${status}`} aria-labelledby="practice-title" aria-live="polite">
         <div className="trainer-topline">
-          <span className="eyebrow">かな入力 · RANDOM {String(sentence.id).padStart(4, "0")}</span>
+          <span className="eyebrow">かな入力 · RANDOM {String(sentence.id).padStart(5, "0")}</span>
           <span className="progress-label">{progress}%</span>
         </div>
         <div className="progress-track" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>
@@ -295,9 +310,7 @@ export default function Home() {
             <span className="error-message">違うキーです。もう一度。</span>
           ) : pendingBase && targetParts ? (
             <span><b>{pendingBase}</b> に <b>{targetParts.mark}</b> を追加</span>
-          ) : (
-            <span>读音按平假名输入，标点会自动跳过</span>
-          )}
+          ) : null}
         </div>
 
         {showHighlight && expected && status !== "complete" && (
